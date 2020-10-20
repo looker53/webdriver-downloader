@@ -1,0 +1,4 @@
+2020/10/20 todo:
+- firefox
+- choose version auto
+- executable_dir, like appium
