@@ -4,13 +4,10 @@ import tempfile
 import zipfile
 import pathlib
 from urllib import request
-
 from . import constant
-
 
 DEFAULT_VERSION = '71.0.3578.80'
 DEFAULT_DOWNLOAD_URL = 'https://npm.taobao.org/mirrors/chromedriver'
-
 
 logging.basicConfig(level=logging.INFO)
 
@@ -35,7 +32,7 @@ def get_chrome_filename():
 
 
 def download_chrome_driver(version=None, mirror_url=None):
-    """Download web driver from URL"""
+    """Download web webdrivers from URL"""
     version = version if version else DEFAULT_VERSION
     host = mirror_url if mirror_url else DEFAULT_DOWNLOAD_URL
     url = '/'.join([host, str(version), get_chrome_filename()])
@@ -58,17 +55,15 @@ def save_chrome_driver(response, target=None):
             chrome_driver = pathlib.Path(abs_target) / file.filename
             if not chrome_driver.exists():
                 zip_file.extract(file, abs_target)
-
-            # constant.chrome_driver = chrome_driver
             return str(chrome_driver)
 
 
 def get_chrome_driver(target=None, version=None, mirror_url=None):
     """
-    Get chrome driver from mirror_url, save to target.
-    :param target: the path dir to save the driver
-    :param version: driver version
-    :param mirror_url: resource url to get the driver
+    Get chrome webdrivers from mirror_url, save to target.
+    :param target: the path dir to save the webdrivers
+    :param version: webdrivers version
+    :param mirror_url: resource url to get the webdrivers
     :return:
     """
     driver_data = download_chrome_driver(version, mirror_url)

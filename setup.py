@@ -11,8 +11,8 @@ setuptools.setup(
     description="A webdriver downloader",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    # url="https://github.com/pypa/sampleproject",
-    packages=['driver'],
+    url="https://github.com/looker53/webdriver-downloader",
+    packages=['webdrivers'],
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",

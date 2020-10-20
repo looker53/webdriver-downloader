@@ -1,19 +1,27 @@
 ## Usage:
 
 Quick start:
+
+```python
+import webdrivers
+print(webdrivers.chrome_driver)
+```
+
+Using with selenium
 ```python
 from selenium.webdriver import Chrome
-import driver
+import webdrivers
 
-driver = Chrome(driver.chrome_driver)
+driver = Chrome(webdrivers.chrome_driver)
+driver.quit()
 ```
 
 Dowloading to customized path:
 ```python
 from selenium.webdriver import Chrome
-import driver
+import webdrivers
 
-driver_path = driver.get_chrome_driver(target='.')
+driver_path = webdrivers.get_chrome_driver(target='.')
 driver = Chrome(executable_path=driver_path)
 driver.quit()
 ```

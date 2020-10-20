@@ -1,5 +1,5 @@
 from selenium.webdriver import Chrome
-import driver
+import webdrivers
 
-driver = Chrome(driver.chrome_driver)
+driver = Chrome(webdrivers.chrome_driver)
 driver.quit()
