@@ -1,27 +1,41 @@
-## Usage:
+## Quick start:
 
-Quick start:
-
+Download chrome driver:
 ```python
 import webdrivers
-print(webdrivers.chrome_driver)
+print(webdrivers.chrome)
 ```
 
-Using with selenium
+Download firefox driver:
+```python
+import webdrivers
+print(webdrivers.firefox)
+```
+
+The drivers would be downloaded in **executor/** dir of the webdrivers package.
+You can find chromedriver.exe or geckodriver.exe in the dir.
+
+
+Using with selenium:
 ```python
 from selenium.webdriver import Chrome
 import webdrivers
 
-driver = Chrome(webdrivers.chrome_driver)
+driver = Chrome(webdrivers.chrome)
 driver.quit()
 ```
 
-Dowloading to customized path:
+Downloading to customized path:
 ```python
-from selenium.webdriver import Chrome
 import webdrivers
-
 driver_path = webdrivers.get_chrome_driver(target='.')
-driver = Chrome(executable_path=driver_path)
-driver.quit()
+```
+
+or absolute path:
+```python
+import pathlib
+import webdrivers
+
+current_dir = pathlib.Path(__file__).parent.parent
+print(webdrivers.get_chrome_driver(current_dir))
 ```
