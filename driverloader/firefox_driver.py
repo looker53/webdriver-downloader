@@ -6,7 +6,7 @@ import zipfile
 import tarfile
 import pathlib
 from urllib import request
-from webdrivers import constant
+from driverloader import constant
 
 
 DEFAULT_VERSION = 'v0.27.0'
@@ -15,12 +15,9 @@ DEFAULT_DOWNLOAD_URL = 'https://npm.taobao.org/mirrors/geckodriver'
 logging.basicConfig(level=logging.INFO)
 
 
-def get_firefox():
-    if constant.firefox_driver.exists():
-        return str(constant.firefox_driver)
-    else:
-        return str(get_firefox_driver())
-
+class FirefoxDriver:
+    def __get__(self, instance, owner):
+        return get_firefox_driver()
 
 def get_firefox_filename(version=DEFAULT_VERSION):
     """parse filename using platform"""
@@ -41,13 +38,13 @@ def get_firefox_filename(version=DEFAULT_VERSION):
 
 
 def download_firefox_driver(version=None, mirror_url=None):
-    """Download web webdrivers from URL"""
+    """Download web driverloader from URL"""
     version = version if version else DEFAULT_VERSION
     host = mirror_url if mirror_url else DEFAULT_DOWNLOAD_URL
     url = '/'.join([host, str(version), get_firefox_filename(version)])
-    logging.info("Downloading webdriver. Please wait...")
+    logging.info("Downloading firefox webdriver. Please wait...")
     r = request.urlopen(url)
-    logging.info("Downloading webdriver finished")
+    logging.info("Downloading firefox webdriver finished")
     return r
 
 
@@ -62,7 +59,7 @@ def save_firefox_driver(response, target=None):
             raise ValueError("Not zip or tar format file")
 
         for file in comp_file.filelist:
-            target = target if target else constant.DRIVER_PATH
+            target = target if target else constant.FIREFOX_PATH
             abs_target = pathlib.Path(target).resolve()
             driver = pathlib.Path(abs_target) / file.filename
             if not driver.exists():
@@ -72,11 +69,17 @@ def save_firefox_driver(response, target=None):
 
 def get_firefox_driver(target=None, version=None, mirror_url=None):
     """
-    Get firefox webdrivers from mirror_url, save to target.
-    :param target: the path dir to save the webdrivers
-    :param version: webdrivers version
-    :param mirror_url: resource url to get the webdrivers
+    Get firefox driverloader from mirror_url, save to target.
+    :param target: the path dir to save the driverloader
+    :param version: driverloader version
+    :param mirror_url: resource url to get the driverloader
     :return:
     """
+    target = target if target else constant.FIREFOX_PATH
+    abs_target = pathlib.Path(target).resolve()
+    # gen = abs_target.iterdir()
+    # for f in gen:
+    #     if 'geckodriver' in f.name:
+    #         return str(f)
     driver_data = download_firefox_driver(version, mirror_url)
-    return save_firefox_driver(driver_data, target)
+    return save_firefox_driver(driver_data, abs_target)

@@ -1,9 +1,10 @@
-2020/10/20 todo:
-- firefox
+2020/10/22 todo:
 - choose version auto
 - executable_dir, like appium
-- command line: webdrivers chrome .
 - update to latest version
+
+v0.0.4
+- command line: e.g. driverloader chrome .
 
 v0.0.3
 - add downloading firefox driver
