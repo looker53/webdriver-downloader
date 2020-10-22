@@ -1,7 +1,9 @@
 .idea
 dist/
+build/
 __pycache__/
 *egg-info/
+
 
 executor/
 *.exe

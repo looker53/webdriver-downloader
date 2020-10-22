@@ -2,14 +2,14 @@
 
 Download chrome driver:
 ```python
-import webdrivers
-print(webdrivers.chrome)
+from driverloader import drivers
+print(drivers.chrome)
 ```
 
 Download firefox driver:
 ```python
-import webdrivers
-print(webdrivers.firefox)
+from driverloader import drivers
+print(drivers.firefox)
 ```
 
 The drivers would be downloaded in **executor/** dir of the webdrivers package.
@@ -19,23 +19,42 @@ You can find chromedriver.exe or geckodriver.exe in the dir.
 Using with selenium:
 ```python
 from selenium.webdriver import Chrome
-import webdrivers
+from driverloader import drivers
 
-driver = Chrome(webdrivers.chrome)
-driver.quit()
+browser = Chrome(drivers.chrome)
+browser.quit()
 ```
 
 Downloading to customized path:
 ```python
-import webdrivers
-driver_path = webdrivers.get_chrome_driver(target='.')
+import driverloader
+driver_path = driverloader.get_chrome_driver(target='.')
 ```
 
 or absolute path:
 ```python
 import pathlib
-import webdrivers
+import driverloader
 
 current_dir = pathlib.Path(__file__).parent.parent
-print(webdrivers.get_chrome_driver(current_dir))
+print(driverloader.get_chrome_driver(current_dir))
 ```
+
+## command line
+Using driverloader by command line like this:
+```bash
+driverloader chrome .
+driverloader firefox .
+```
+Two arguments:
+- driver_name, chrome and firefox supported.
+- path,  the path you want to save the driver.
+
+Options:
+- `-v` or `--version`, pool support now.
+
+
+## Mirror URL
+webdriver-downloader get the drivers from https://npm.taobao.org/mirrors/
+- chrome driver: https://npm.taobao.org/mirrors/chromedriver/
+- firefox driver: https://npm.taobao.org/mirrors/geckodriver/

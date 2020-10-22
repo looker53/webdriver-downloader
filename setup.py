@@ -4,15 +4,15 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="webdriver-downloader", # Replace with your own username
-    version="0.0.2",
+    name="driverloader", # Replace with your own username
+    version="0.0.4",
     author="Looker W.",
     author_email="looker53@sina.com",
     description="A webdriver downloader",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/looker53/webdriver-downloader",
-    packages=['webdrivers'],
+    packages=['driverloader'],
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
@@ -22,4 +22,9 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
+    entry_points={
+        'console_scripts': [
+            'driverloader=driverloader.cli:cli',
+        ],
+    },
 )
