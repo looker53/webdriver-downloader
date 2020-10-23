@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="driverloader", # Replace with your own username
-    version="0.0.4",
+    version="0.0.1",
     author="Looker W.",
     author_email="looker53@sina.com",
     description="A webdriver downloader",
@@ -22,6 +22,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
+    install_requires=['click'],
     entry_points={
         'console_scripts': [
             'driverloader=driverloader.cli:cli',
