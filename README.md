@@ -3,13 +3,13 @@
 Download chrome driver:
 ```python
 from driverloader import chrome_driver
-print(chrome_driver)
+print(chrome_driver.default)
 ```
 
 Download firefox driver:
 ```python
 from driverloader import firefox_driver
-print(firefox_driver)
+print(firefox_driver.default)
 ```
 
 The drivers would be downloaded in **executor/** dir of the webdrivers package.
@@ -21,29 +21,29 @@ Using with selenium:
 from selenium.webdriver import Chrome
 from driverloader import chrome_driver
 
-browser = Chrome(chrome_driver)
+browser = Chrome(chrome_driver.default)
 browser.quit()
 ```
 
 Downloading to customized path:
 ```python
-from driverloader import ChromeDriver
-driver_path = ChromeDriver().get('.')
+from driverloader import chrome_driver
+driver_path = chrome_driver(path='.')
 ```
 
 or absolute path:
 ```python
 import pathlib
-from driverloader import ChromeDriver
+from driverloader import chrome_driver
 
 current_dir = pathlib.Path(__file__).parent.parent
-print(ChromeDriver().get(current_dir))
+print(chrome_driver(current_dir))
 ```
 
 customized version:
 ```python
-from driverloader import ChromeDriver
-driver_path = ChromeDriver(version=70).get('.')
+from driverloader import chrome_driver
+driver_path = chrome_driver(path='.', version='70')
 ```
 
 

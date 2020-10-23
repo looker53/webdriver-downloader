@@ -1,6 +1,4 @@
-from selenium.webdriver import Chrome
-from driverloader import drivers
+from driverloader import chrome_driver
 
-
-driver = Chrome(drivers.chrome)
-driver.quit()
+driver = chrome_driver.default
+print(driver)

@@ -1,15 +1,15 @@
 import click
-from driverloader.chrome_driver import ChromeDriver, DEFAULT_CHROME_VERSION
-from driverloader.firefox_driver import FirefoxDriver, DEFAULT_FIREFOX_VERSION
+from driverloader import chrome_driver, firefox_driver
+from driverloader.driver import DEFAULT_FIREFOX_VERSION, DEFAULT_CHROME_VERSION
 
 
-def download_driver(name: str, dst=None, version=None, force=False):
+def download_driver(name: str, path=None, version=None, force=False):
     if name.lower() == 'chrome':
         version = version or DEFAULT_CHROME_VERSION
-        return ChromeDriver(version=version).get(dst, force=force)
+        return chrome_driver(path=path, version=version, force=force)
     elif name.lower() == 'firefox':
         version = version or DEFAULT_FIREFOX_VERSION
-        return FirefoxDriver(version=version).get(dst, force=force)
+        return firefox_driver(path=path, version=version, force=force)
     raise ValueError("name must be chrome or firefox")
 
 
@@ -24,7 +24,7 @@ def cli(driver_name, path, version, force):
     - driver_name: Which driver, [chrome, firefox] supported.\n
     - path: Path to save the driver.
     """
-    driver = download_driver(driver_name, dst=path, version=version, force=force)
+    driver = download_driver(driver_name, path=path, version=version, force=force)
     click.echo(driver)
 
 

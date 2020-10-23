@@ -1,5 +1,7 @@
 import logging
 import re
+import platform
+import sys
 import tempfile
 import zipfile
 import pathlib
@@ -7,6 +9,8 @@ from urllib import request
 from driverloader import config
 
 DEFAULT_HOST = 'https://npm.taobao.org'
+DEFAULT_CHROME_VERSION = '71.0.3578.80'
+DEFAULT_FIREFOX_VERSION = '0.27.0'
 
 logging.basicConfig(level=logging.INFO)
 
@@ -15,19 +19,16 @@ class BaseDriver:
     host = DEFAULT_HOST
     pattern = r'<a href="(/mirrors/(chromedriver|geckodriver)/v?([0-9.]+)\/)">'
 
-    def __init__(self, name, version, host=None):
+    def __init__(self, name, host=None):
         self.name = name
         if self.name == 'firefox':
             self.name = 'gecko'
-        self.version = str(version)
+        # self.version = str(version)
         self.host = host or DEFAULT_HOST
+        self.version = ''
         self.full_version = ''
         self.url = ''
         self.index_url = self.host + '/mirrors/' + self.name + 'driver'
-
-
-    def __get__(self, instance, owner):
-        return self.get_driver(config.DRIVER_PATH)
 
     @property
     def versions(self):
@@ -52,15 +53,15 @@ class BaseDriver:
                 return self.full_version, self.url
         raise ValueError("no this version {}".format(self.version))
 
-    def get(self, path=None, force=False):
+    def __call__(self, version, path=None, force=False):
         save_dir_str = path if path else config.DRIVER_PATH
         save_dir = pathlib.Path(save_dir_str).resolve()
-        version = self.version
+        self.version = str(version)
 
         if not force:
             gen = save_dir.iterdir()
             for f in gen:
-                if version in f.name:
+                if self.version in f.name:
                     # logging.info(""" you get a driver:{}
                     # if you want to download any way, use force=True
                     # """.format(f))
@@ -94,3 +95,57 @@ class BaseDriver:
                 except FileExistsError:
                     download_file.unlink()
                     return str(new_target)
+
+
+class ChromeDriver(BaseDriver):
+    def __init__(self, host=None):
+        super().__init__('chrome', host)
+
+    def __call__(self, path=None, version=DEFAULT_CHROME_VERSION, force=False):
+        return super().__call__(path=path, version=version, force=force)
+
+    @property
+    def default(self):
+        return self.__call__(path=None, version=DEFAULT_CHROME_VERSION, force=False)
+
+    @property
+    def _get_file(self):
+        """parse filename using platform"""
+        platform = sys.platform
+        platforms = {
+            "win32": "win32",
+            "win64": "win64",
+            "linux": "linux64",
+            "darwin": "mac64",
+        }
+        return 'chromedriver_{}.zip'.format(platforms.get(platform, ''))
+
+
+class FirefoxDriver(BaseDriver):
+    def __init__(self, host=None):
+        super().__init__('firefox', host=host)
+
+    def __call__(self, path=None, version=DEFAULT_FIREFOX_VERSION, force=False):
+        return super().__call__(path=path, version=version, force=force)
+
+    @property
+    def default(self):
+        return self.__call__(path=None, version=DEFAULT_FIREFOX_VERSION, force=False)
+
+    @property
+    def _get_file(self):
+        """parse filename using platform"""
+        system = sys.platform
+        if system.startswith('win'):
+            system = system[:3]
+        file_map = {
+            "linux32": f"geckodriver-v{self.full_version}-linux32.tar.gz",
+            "linux64": f"geckodriver-v{self.full_version}-linux64.tar.gz",
+            "darwin32": f"geckodriver-v{self.full_version}-macos.tar.gz",
+            "darwin64": f"geckodriver-v{self.full_version}-macos.tar.gz",
+            "win32": f"geckodriver-v{self.full_version}-win32.zip",
+            "win64": f"geckodriver-v{self.full_version}-win64.zip",
+        }
+        bit = platform.architecture()[0][:2]
+        file = file_map.get(system + bit, '')
+        return file

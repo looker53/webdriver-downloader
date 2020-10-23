@@ -1,14 +1,4 @@
-from .chrome_driver import ChromeDriver
-from .firefox_driver import FirefoxDriver
+from driverloader.driver import ChromeDriver, FirefoxDriver
 
-
-# class Drivers:
-#     chrome = ChromeDriver()
-#     firefox = FirefoxDriver()
-#
-#
-# drivers = Drivers()
-
-chrome_driver = ChromeDriver().get()
-firefox_driver = FirefoxDriver().get()
-
+chrome_driver = ChromeDriver()
+firefox_driver = FirefoxDriver()
