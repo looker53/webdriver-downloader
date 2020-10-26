@@ -81,10 +81,10 @@ class BaseDriver:
         """
         with tempfile.TemporaryFile() as f:
             f.write(response.read())
-            if zipfile.is_zipfile(f):
-                zip_file = zipfile.ZipFile(f)
-            elif tarfile.is_tarfile(f):
-                zip_file = tarfile.TarFile(f)
+            if zipfile.is_zipfile(f.name):
+                zip_file = zipfile.ZipFile(f.name)
+            elif tarfile.is_tarfile(f.name):
+                zip_file = tarfile.TarFile(f.name)
             else:
                 raise ValueError("not zip or tar format")
 

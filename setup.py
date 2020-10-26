@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="driverloader", # Replace with your own username
-    version="0.0.5",
+    version="0.0.10",
     author="Looker W.",
     author_email="looker53@sina.com",
     description="A webdriver downloader",
