@@ -1,7 +1,10 @@
-2020/10/22 todo:
-- choose version auto
+2020/10/23 todo:
 - executable_dir, like appium
 - update to latest version
+
+v0.0.5
+- choose version
+- change most api
 
 v0.0.4
 - command line: e.g. driverloader chrome .

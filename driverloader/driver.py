@@ -4,6 +4,7 @@ import platform
 import sys
 import tempfile
 import zipfile
+import tarfile
 import pathlib
 from urllib import request
 from driverloader import config
@@ -62,9 +63,6 @@ class BaseDriver:
             gen = save_dir.iterdir()
             for f in gen:
                 if self.version in f.name:
-                    # logging.info(""" you get a driver:{}
-                    # if you want to download any way, use force=True
-                    # """.format(f))
                     return str(f)
         self.full_version_and_url
         driver_data = self.download()
@@ -78,12 +76,18 @@ class BaseDriver:
         return r
 
     def save(self, response, path):
-        """Save the data of download."""
+        """Save the data of download.
+        TODO: tar file
+        """
         with tempfile.TemporaryFile() as f:
             f.write(response.read())
-            zip_file = zipfile.ZipFile(f)
-            if not zip_file:
-                raise ValueError("Not a zip file format")
+            if zipfile.is_zipfile(f):
+                zip_file = zipfile.ZipFile(f)
+            elif tarfile.is_tarfile(f):
+                zip_file = tarfile.TarFile(f)
+            else:
+                raise ValueError("not zip or tar format")
+
             for file in zip_file.filelist:
                 download_file = zip_file.extract(file, path)
                 download_file = pathlib.Path(download_file)
@@ -101,12 +105,18 @@ class ChromeDriver(BaseDriver):
     def __init__(self, host=None):
         super().__init__('chrome', host)
 
-    def __call__(self, path=None, version=DEFAULT_CHROME_VERSION, force=False):
-        return super().__call__(path=path, version=version, force=force)
+    def __call__(self, path=None,
+                 version=DEFAULT_CHROME_VERSION,
+                 force=False):
+        return super().__call__(path=path,
+                                version=version,
+                                force=force)
 
     @property
     def default(self):
-        return self.__call__(path=None, version=DEFAULT_CHROME_VERSION, force=False)
+        return self.__call__(path=None,
+                             version=DEFAULT_CHROME_VERSION,
+                             force=False)
 
     @property
     def _get_file(self):
@@ -125,8 +135,11 @@ class FirefoxDriver(BaseDriver):
     def __init__(self, host=None):
         super().__init__('firefox', host=host)
 
-    def __call__(self, path=None, version=DEFAULT_FIREFOX_VERSION, force=False):
-        return super().__call__(path=path, version=version, force=force)
+    def __call__(self, path=None,
+                 version=DEFAULT_FIREFOX_VERSION, force=False):
+        return super().__call__(path=path,
+                                version=version,
+                                force=force)
 
     @property
     def default(self):
