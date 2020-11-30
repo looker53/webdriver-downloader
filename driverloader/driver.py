@@ -1,3 +1,4 @@
+import os
 import logging
 import re
 import platform
@@ -77,28 +78,36 @@ class BaseDriver:
 
     def save(self, response, path):
         """Save the data of download.
-        TODO: tar file
         """
-        with tempfile.TemporaryFile() as f:
-            f.write(response.read())
-            if zipfile.is_zipfile(f.name):
-                zip_file = zipfile.ZipFile(f.name)
-            elif tarfile.is_tarfile(f.name):
-                zip_file = tarfile.TarFile(f.name)
-            else:
-                raise ValueError("not zip or tar format")
-
-            for file in zip_file.filelist:
-                download_file = zip_file.extract(file, path)
+        f = tempfile.NamedTemporaryFile(dir=path, delete=False)
+        f.write(response.read())
+        if zipfile.is_zipfile(f.name):
+            zip_file = zipfile.ZipFile(f)
+            filelist = zip_file.filelist
+            for file in filelist:
+                download_file = zip_file.extract(file.filename, path)
                 download_file = pathlib.Path(download_file)
-                new_name = download_file.stem + self.full_version + download_file.suffix
-                new_target = path / new_name
-                try:
-                    download_file.rename(new_target)
-                    return str(new_target)
-                except FileExistsError:
-                    download_file.unlink()
-                    return str(new_target)
+        elif tarfile.is_tarfile(f.name):
+            zip_file = tarfile.open(f.name)
+            filelist = zip_file.getmembers()
+            for file in filelist:
+                zip_file.extract(file.name, path)
+                download_file = pathlib.Path(path) / file.name
+        else:
+            raise ValueError("not zip or tar format")
+
+        f.close()
+        pathlib.Path(f.name).unlink()
+
+        new_name = download_file.stem + self.full_version + download_file.suffix
+        new_target = path / new_name
+        try:
+            download_file.rename(new_target)
+            return str(new_target)
+        except FileExistsError:
+            download_file.unlink()
+            return str(new_target)
+
 
 
 class ChromeDriver(BaseDriver):
