@@ -101,8 +101,10 @@ class BaseDriver:
 
         new_name = download_file.stem + self.full_version + download_file.suffix
         new_target = path / new_name
+
         try:
             download_file.rename(new_target)
+            new_target.chmod(0o744)
             return str(new_target)
         except FileExistsError:
             download_file.unlink()
